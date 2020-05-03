@@ -23,7 +23,11 @@ namespace EFCore.WebAPI
 
             services.AddDbContext<HeroiContexto>(options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddScoped<IEFcoreRepository, EFCoreRepository>();
+
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

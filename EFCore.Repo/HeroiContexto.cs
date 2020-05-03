@@ -10,7 +10,6 @@ namespace EFCore.Repo
         {
 
         }
-
         public DbSet<Arma> Armas { get; set; }
         public DbSet<Batalha> Batalhas { get; set; }
         public DbSet<Heroi> Herois { get; set; }
