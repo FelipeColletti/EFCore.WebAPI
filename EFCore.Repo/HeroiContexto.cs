@@ -5,7 +5,7 @@ namespace EFCore.Repo
 {
     public class HeroiContexto : DbContext
     {
- 
+
         public HeroiContexto(DbContextOptions<HeroiContexto> options) : base(options)
         {
 
