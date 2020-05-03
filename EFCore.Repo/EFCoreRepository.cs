@@ -42,11 +42,8 @@ namespace EFCore.Repo
             {
                 query = query.Include(b => b.HeroisBatalhas).ThenInclude(heroiB => heroiB.Heroi);
             }
-
             query = query.OrderBy(b => b.Id);
-
             return await query.FirstOrDefaultAsync(b => b.Id == id);
-           
         }
 
         public async Task<Batalha[]> GetAllBatalha(bool incluirBatalha)
@@ -57,9 +54,7 @@ namespace EFCore.Repo
             {
                 query = query.Include(b => b.HeroisBatalhas).ThenInclude(heroiB => heroiB.Batalha);
             }
-
             query = query.OrderBy(b => b.Id);
-
             return await query.AsNoTracking().ToArrayAsync();
         }
 
@@ -71,9 +66,7 @@ namespace EFCore.Repo
             {
                 query = query.Include(h => h.HeroisBatalhas).ThenInclude(heroiB => heroiB.Batalha);
             }
-
             query = query.OrderBy(h => h.Id);
-
             return await query.AsNoTracking().ToArrayAsync();
         }
 
@@ -85,9 +78,7 @@ namespace EFCore.Repo
             {
                 query = query.Include(h => h.HeroisBatalhas).ThenInclude(heroiB => heroiB.Batalha);
             }
-
             query = query.AsNoTracking().Where(h => h.Nome.Contains(nome)).OrderBy(h => h.Id);
-
             return await query.ToArrayAsync();
         }
 
@@ -99,9 +90,7 @@ namespace EFCore.Repo
             {
                 query = query.Include(h => h.HeroisBatalhas).ThenInclude(heroiB => heroiB.Batalha);
             }
-
             query = query.OrderBy(h => h.Id);
-
             return await query.FirstOrDefaultAsync(h => h.Id == id);
         }
     }

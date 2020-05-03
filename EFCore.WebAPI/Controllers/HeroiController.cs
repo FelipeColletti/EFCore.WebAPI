@@ -1,9 +1,8 @@
 ﻿using EFCore.Dominio;
 using EFCore.Repo;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace EFCore.WebAPI.Controllers
 {
@@ -11,77 +10,116 @@ namespace EFCore.WebAPI.Controllers
     [ApiController]
     public class HeroiController : ControllerBase
     {
-        public readonly HeroiContexto _contexto;
+        private readonly IEFcoreRepository _repo;
 
-        public HeroiController(HeroiContexto contexto)
+        public HeroiController(IEFcoreRepository repo)
         {
-            _contexto = contexto;
+            _repo = repo;
         }
-
         // GET: api/Heroi
         [HttpGet]
-        public ActionResult Get()
+        public async Task<IActionResult> GetAllAsync()
         {
             try
             {
-                return Ok(new Heroi());
+                var herois = await _repo.GetAllHerois(true);
+                if (herois != null)
+                {
+                    return Ok(herois);
+                }
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex}");
             }
-
+            return BadRequest("Não existe registros");
         }
 
         // GET: api/Heroi/5
-        [HttpGet("{id}", Name = "Get")]
-        public ActionResult Get(int id)
+        [HttpGet("{id}", Name = "GetHeroi")]
+        public async Task<IActionResult> GetIdAsync(int id)
         {
-            return Ok("value");
+            try
+            {
+                var herois = await _repo.GetHeroiById(id, true);
+                if (herois != null)
+                {
+                    return Ok(herois);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro: {ex}");
+            }
+            return BadRequest("Não existe regitros");
         }
 
         // POST: api/Heroi
         [HttpPost]
-        public ActionResult Post(Heroi model)
+        public async Task<IActionResult> PostAsync(Heroi model)
         {
             try
             {
-                _contexto.Herois.Add(model);
-                _contexto.SaveChanges();
-
-                return Ok("Correto!");
+                _repo.Add(model);
+                if (await _repo.SaveChangeAsync())
+                {
+                    return Ok("Correto!");
+                }
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex}");
             }
+
+            return BadRequest("Não salvou!");
         }
 
         // PUT: api/Heroi/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, Heroi model)
+        public async Task<ActionResult> PutAsync(int id, Heroi model)
         {
             try
             {
-                if (_contexto.Herois.AsNoTracking().FirstOrDefault(h => h.Id == id) != null)
+                var herois = await _repo.GetBatalhaById(id);
+                if (herois != null)
                 {
-                    _contexto.Herois.Update(model);
-                    _contexto.SaveChanges();
+                    _repo.Update(herois);
 
-                    return Ok("Correto!");
+                    if (await _repo.SaveChangeAsync())
+                    {
+                        return Ok("Correto!");
+                    }
                 }
-                return Ok("Não encontrado");
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex}");
             }
+            return BadRequest("Não foi alterdo!");
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                var heroi = await _repo.GetBatalhaById(id);
+                if (heroi != null)
+                {
+                    _repo.Delete(heroi);
+
+                    if (await _repo.SaveChangeAsync())
+                    {
+                        return Ok("Correto!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro: {ex}");
+            }
+            return BadRequest("Não foi deletado");
         }
     }
 }
