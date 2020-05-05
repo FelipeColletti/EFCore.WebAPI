@@ -80,10 +80,10 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                var herois = await _repo.GetBatalhaById(id);
+                var herois = await _repo.GetHeroiById(id);
                 if (herois != null)
                 {
-                    _repo.Update(herois);
+                    _repo.Update(model);
 
                     if (await _repo.SaveChangeAsync())
                     {
@@ -104,7 +104,7 @@ namespace EFCore.WebAPI.Controllers
         {
             try
             {
-                var heroi = await _repo.GetBatalhaById(id);
+                var heroi = await _repo.GetHeroiById(id);
                 if (heroi != null)
                 {
                     _repo.Delete(heroi);

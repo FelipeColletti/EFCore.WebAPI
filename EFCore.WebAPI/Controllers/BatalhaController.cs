@@ -79,7 +79,7 @@ namespace EFCore.WebAPI.Controllers
                 var batalha = await _repo.GetBatalhaById(id);
                 if (batalha != null)
                 {
-                    _repo.Update(batalha);
+                    _repo.Update(model);
 
                     if (await _repo.SaveChangeAsync())
                     {
